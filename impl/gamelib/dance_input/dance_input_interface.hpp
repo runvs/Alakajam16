@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <optional>
 
-enum class eDanceInput : std::uint8_t { Left, Right, Up, Down, A, BLeft, BRight, BUp, BDown };
+enum class eDanceInput : std::uint8_t { Left, Right, Up, Down };
 
 class DanceInputInterface {
 public:

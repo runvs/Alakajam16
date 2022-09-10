@@ -90,6 +90,12 @@ void InputQueue::setAddInputCallback(
     m_addInputCallback = cb;
 }
 
+void InputQueue::setHideCallback(
+    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb)
+{
+    m_hideCallback = cb;
+}
+
 void InputQueue::clear() { m_inputs.clear(); }
 bool InputQueue::canTakeInput() const
 {
@@ -117,4 +123,17 @@ std::shared_ptr<DanceInputInterface> InputQueue::getCurrentInput() const
         return nullptr;
     }
     return m_inputs.at(m_currentInputIndex);
+}
+
+void InputQueue::hide()
+{
+    if (m_hideCallback) {
+        m_hideCallback(getAllIcons());
+    }
+    m_isHidden = true;
+}
+
+std::vector<std::shared_ptr<DanceInputInterface>> InputQueue::getAllInputs() const
+{
+    return m_allInputs;
 }

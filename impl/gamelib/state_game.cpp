@@ -1,7 +1,9 @@
 ﻿#include "state_game.hpp"
+#include "random/random.hpp"
 #include <box2dwrapper/box2d_world_impl.hpp>
 #include <color/color.hpp>
-#include <dance_input/dance_input.hpp>
+#include <dance_input/dance_input_down.hpp>
+#include <dance_input/dance_input_up.hpp>
 #include <game_interface.hpp>
 #include <game_properties.hpp>
 #include <hud/hud.hpp>
@@ -31,7 +33,9 @@ void StateGame::doInternalCreate()
     m_inputQueue = std::make_shared<InputQueue>();
     m_inputQueue->setAllInputs({ std::make_shared<DanceInputUp>(textureManager()),
         std::make_shared<DanceInputDown>(textureManager()) });
+
     m_inputQueue->setWrongInputCallback([this]() {
+        getGame()->logger().info("wrong input callback invoked");
         auto icons = m_inputQueue->getAllIcons();
         for (auto& ic : icons) {
 
@@ -44,6 +48,7 @@ void StateGame::doInternalCreate()
 
     m_inputQueue->setAddInputCallback(
         [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
+            getGame()->logger().info("add input");
             for (auto& i : icons) {
                 i->setScale(jt::Vector2f { 2.0f, 2.0f });
 
@@ -58,11 +63,18 @@ void StateGame::doInternalCreate()
             }
         });
 
+    m_inputQueue->setHideCallback(
+        [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
+            getGame()->logger().info("hide input");
+            for (auto& i : icons) {
+                auto twa = jt::TweenAlpha::create(i, 0.3f, 255U, 0U);
+                add(twa);
+            }
+        });
+
     add(m_inputQueue);
 
-    m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));
-    m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));
-    m_inputQueue->add(std::make_shared<DanceInputDown>(textureManager()));
+    addInputsToQueue(3);
 
     createPlayer();
 
@@ -117,3 +129,30 @@ void StateGame::endGame()
 }
 
 std::string StateGame::getName() const { return "State Game"; }
+
+std::shared_ptr<DanceInputInterface> createRandomDanceInput(jt::TextureManagerInterface& tm)
+{
+    auto const randomValue = jt::Random::getInt(0, 3);
+    if (randomValue == 0) {
+        return std::make_shared<DanceInputUp>(tm);
+    } else if (randomValue == 1) {
+        return std::make_shared<DanceInputDown>(tm);
+    } else {
+        // TODO
+        return std::make_shared<DanceInputUp>(tm);
+    }
+}
+
+// call this only once
+void StateGame::addInputsToQueue(std::size_t numberOfInputsToAdd)
+{
+    for (auto i = 0; i != numberOfInputsToAdd; ++i) {
+        auto t = std::make_shared<jt::Timer>(
+            0.75f * i, [this]() { m_inputQueue->add(createRandomDanceInput(textureManager())); },
+            1);
+        add(t);
+    }
+    auto t = std::make_shared<jt::Timer>(
+        0.75f * (numberOfInputsToAdd + 1), [this]() { m_inputQueue->hide(); }, 1);
+    add(t);
+}
