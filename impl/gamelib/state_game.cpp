@@ -38,8 +38,19 @@ void StateGame::doInternalCreate()
         std::make_shared<DanceInputLeft>(textureManager()),
         std::make_shared<DanceInputRight>(textureManager()) });
 
+    m_inputQueue->setCorrectCallback(
+        [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
+            getGame()->logger().info("correct input callback");
+            for (auto& i : icons) {
+                i->flash(0.25f, jt::colors::Green);
+
+                auto twa = std::make_shared<jt::TweenAlpha>(i, 0.25f, 0, 255);
+                add(twa);
+            }
+        });
+    
     m_inputQueue->setWrongInputCallback([this]() {
-        getGame()->logger().info("wrong input callback invoked");
+        getGame()->logger().info("wrong input callback");
         auto icons = m_inputQueue->getAllIcons();
         for (auto& ic : icons) {
 

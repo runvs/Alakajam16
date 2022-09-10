@@ -13,27 +13,27 @@ public:
     void add(std::shared_ptr<DanceInputInterface> input);
 
     void setAllInputs(std::vector<std::shared_ptr<DanceInputInterface>> const& allInputs);
-    // TODO could be changed to take vector of drawables
+
     void setWrongInputCallback(std::function<void(void)> const& cb);
     void setAddInputCallback(
         std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
     void setHideCallback(
         std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
+    void setCorrectCallback(
+        std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
 
     void clear();
-
-    std::vector<std::shared_ptr<jt::DrawableInterface>> getAllIcons() const;
-
     void hide();
 
+    std::vector<std::shared_ptr<jt::DrawableInterface>> getAllIcons() const;
     std::vector<std::shared_ptr<DanceInputInterface>> getAllInputs() const;
 
 private:
     std::deque<std::shared_ptr<DanceInputInterface>> m_inputs;
-
     std::vector<std::shared_ptr<DanceInputInterface>> m_allInputs;
 
     std::function<void(void)> m_wrongInputCallback;
+    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_correctInputCallback;
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_addInputCallback;
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_hideCallback;
 

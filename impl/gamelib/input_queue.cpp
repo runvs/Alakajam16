@@ -45,7 +45,11 @@ void InputQueue::checkForInput()
 
     if (expectedInput->correctInputPressed(getGame()->input())) {
         std::cout << "correct\n";
+        if (m_correctInputCallback) {
+            m_correctInputCallback(getCurrentInput()->getIcon()->getAllDrawables());
+        }
         m_currentInputIndex++;
+
         return;
     }
 }
@@ -84,6 +88,13 @@ void InputQueue::setWrongInputCallback(std::function<void(void)> const& cb)
 {
     m_wrongInputCallback = cb;
 }
+
+void InputQueue::setCorrectCallback(
+    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb)
+{
+    m_correctInputCallback = cb;
+}
+
 void InputQueue::setAddInputCallback(
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb)
 {
