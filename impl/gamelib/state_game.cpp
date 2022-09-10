@@ -37,6 +37,7 @@ void StateGame::doInternalCreate()
     addInputsToQueue(2);
 
     createPirate();
+    createParrot();
 
     m_vignette = std::make_shared<jt::Vignette>(GP::GetScreenSize());
     add(m_vignette);
@@ -96,7 +97,7 @@ void StateGame::createQueue()
         auto const time
             = m_pirate->m_anim->getCurrentAnimTotalTime() * getAnimRepeatFromType(input->getType());
         m_pirateReturnToIdleTimer = std::make_shared<jt::Timer>(
-            time, [this]() { m_pirate->m_anim->play("down", 0, true); }, 1);
+            time, [this]() { m_pirate->m_anim->play("idle3", 0, true); }, 1);
         add(m_pirateReturnToIdleTimer);
     });
 
@@ -158,6 +159,12 @@ void StateGame::createPirate()
 {
     m_pirate = std::make_shared<Pirate>();
     add(m_pirate);
+}
+
+void StateGame::createParrot()
+{
+    m_parrot = std::make_shared<Parrot>();
+    add(m_parrot);
 }
 
 void StateGame::doInternalUpdate(float const elapsed)
@@ -228,12 +235,19 @@ void StateGame::addInputsToQueue(std::size_t numberOfInputsToAdd)
                     twa->addCompleteCallback(
                         [this]() { getGame()->gfx().camera().shake(0.15f, 5.0f); });
                     add(twa);
+
+                    m_parrot->m_anim->play(getAnimNameFromType(input->getType()));
                 }
             },
             1);
         add(t);
     }
     auto t = std::make_shared<jt::Timer>(
-        0.75f * (numberOfInputsToAdd + 1), [this]() { m_inputQueue->hide(); }, 1);
+        0.75f * (numberOfInputsToAdd + 1),
+        [this]() {
+            m_inputQueue->hide();
+            m_parrot->m_anim->play("idle", 0, true);
+        },
+        1);
     add(t);
 }

@@ -34,6 +34,7 @@ public:
     static jt::Vector2f PlayerSize();
     static jt::Vector2f PiratePosition();
     static jt::Vector2f QueueOffset();
+    static jt::Vector2f ParrotPosition();
 };
 
 #endif
