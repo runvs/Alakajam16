@@ -24,7 +24,7 @@ public:
     std::string getName() const override;
 
 private:
-    std::shared_ptr<jt::Shape> m_background { nullptr };
+    std::shared_ptr<jt::Animation> m_background { nullptr };
     std::shared_ptr<jt::Vignette> m_vignette { nullptr };
     std::shared_ptr<Hud> m_hud { nullptr };
 

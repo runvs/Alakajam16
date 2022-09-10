@@ -26,11 +26,11 @@ void StateGame::doInternalCreate()
     using jt::Shape;
     using jt::TweenAlpha;
 
-    m_background = std::make_shared<Shape>();
-    m_background->makeRect({ w, h }, textureManager());
-    m_background->setColor(GP::PaletteBackground());
-    m_background->setIgnoreCamMovement(true);
-    m_background->update(0.0f);
+    m_background = std::make_shared<jt::Animation>();
+
+    m_background->add("assets/Beach.png", "idle", jt::Vector2u { 240, 160 }, { 0, 1, 2, 3 }, 0.3f,
+        textureManager());
+    m_background->play("idle");
 
     createQueue();
 
@@ -97,7 +97,7 @@ void StateGame::createQueue()
         auto const time
             = m_pirate->m_anim->getCurrentAnimTotalTime() * getAnimRepeatFromType(input->getType());
         m_pirateReturnToIdleTimer = std::make_shared<jt::Timer>(
-            time, [this]() { m_pirate->m_anim->play("idle3", 0, true); }, 1);
+            time, [this]() { m_pirate->m_anim->play("idle", 0, true); }, 1);
         add(m_pirateReturnToIdleTimer);
     });
 

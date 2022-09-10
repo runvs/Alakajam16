@@ -1,0 +1,56 @@
+{ "frames": {
+   "Beach 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 300
+   },
+   "Beach 1.ase": {
+    "frame": { "x": 240, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 300
+   },
+   "Beach 2.ase": {
+    "frame": { "x": 480, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 300
+   },
+   "Beach 3.ase": {
+    "frame": { "x": 720, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 300
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "Beach.png",
+  "format": "RGBA8888",
+  "size": { "w": 960, "h": 160 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Sand", "opacity": 255, "blendMode": "normal" },
+   { "name": "Wasser", "opacity": 255, "blendMode": "normal" },
+   { "name": "Himmel", "opacity": 255, "blendMode": "normal" },
+   { "name": "Palmen", "opacity": 255, "blendMode": "normal" },
+   { "name": "Schaufel", "opacity": 255, "blendMode": "normal" },
+   { "name": "Boot", "opacity": 255, "blendMode": "normal" },
+   { "name": "Splash", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
