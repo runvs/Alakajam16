@@ -31,8 +31,6 @@ public:
 
     static jt::Palette getPalette();
 
-    static int PhysicVelocityIterations();
-    static int PhysicPositionIterations();
     static jt::Vector2f PlayerSize();
 };
 

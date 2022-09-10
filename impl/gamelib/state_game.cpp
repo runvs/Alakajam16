@@ -1,6 +1,7 @@
 ﻿#include "state_game.hpp"
 #include <box2dwrapper/box2d_world_impl.hpp>
 #include <color/color.hpp>
+#include <dance_input.hpp>
 #include <game_interface.hpp>
 #include <game_properties.hpp>
 #include <hud/hud.hpp>
@@ -12,8 +13,6 @@
 
 void StateGame::doInternalCreate()
 {
-    m_world = std::make_shared<jt::Box2DWorldImpl>(jt::Vector2f { 0.0f, 0.0f });
-
     float const w = static_cast<float>(GP::GetWindowSize().x);
     float const h = static_cast<float>(GP::GetWindowSize().y);
 
@@ -26,6 +25,12 @@ void StateGame::doInternalCreate()
     m_background->setIgnoreCamMovement(true);
     m_background->update(0.0f);
 
+    m_inputQueue = std::make_shared<InputQueue>();
+    m_inputQueue->add(std::make_shared<DanceInputUp>());
+    m_inputQueue->add(std::make_shared<DanceInputUp>());
+    m_inputQueue->add(std::make_shared<DanceInputDown>());
+    add(m_inputQueue);
+
     createPlayer();
 
     m_vignette = std::make_shared<jt::Vignette>(GP::GetScreenSize());
@@ -37,16 +42,11 @@ void StateGame::doInternalCreate()
     setAutoDraw(false);
 }
 
-void StateGame::createPlayer()
-{
-    m_player = std::make_shared<Player>(m_world, *this);
-    add(m_player);
-}
+void StateGame::createPlayer() { }
 
 void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
-        m_world->step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
         // update game logic here
         if (getGame()->input().keyboard()->justPressed(jt::KeyCode::A)) {
             m_scoreP1++;
