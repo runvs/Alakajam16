@@ -1,7 +1,7 @@
 ﻿#include "state_game.hpp"
 #include <box2dwrapper/box2d_world_impl.hpp>
 #include <color/color.hpp>
-#include <dance_input.hpp>
+#include <dance_input/dance_input.hpp>
 #include <game_interface.hpp>
 #include <game_properties.hpp>
 #include <hud/hud.hpp>
@@ -26,9 +26,9 @@ void StateGame::doInternalCreate()
     m_background->update(0.0f);
 
     m_inputQueue = std::make_shared<InputQueue>();
-    m_inputQueue->add(std::make_shared<DanceInputUp>());
-    m_inputQueue->add(std::make_shared<DanceInputUp>());
-    m_inputQueue->add(std::make_shared<DanceInputDown>());
+    m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));
+    m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));
+    m_inputQueue->add(std::make_shared<DanceInputDown>(textureManager()));
     add(m_inputQueue);
 
     createPlayer();

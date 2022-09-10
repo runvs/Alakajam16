@@ -2,7 +2,7 @@
 #ifndef ALAKAJAM16_INPUT_QUEUE_HPP
 #define ALAKAJAM16_INPUT_QUEUE_HPP
 
-#include <dance_input_interface.hpp>
+#include <dance_input/dance_input_interface.hpp>
 #include <game_object.hpp>
 #include <deque>
 #include <memory>
@@ -17,6 +17,9 @@ private:
     void doCreate() override;
     void doUpdate(float const elapsed) override;
     void doDraw() const override;
+
+    void updateIcons(float elapsed);
+    void checkForInput();
 };
 
 #endif // ALAKAJAM16_INPUT_QUEUE_HPP
