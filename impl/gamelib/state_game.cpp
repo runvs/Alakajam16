@@ -11,6 +11,8 @@
 #include <state_menu.hpp>
 #include <timer.hpp>
 #include <tweens/tween_alpha.hpp>
+#include <tweens/tween_color.hpp>
+#include <tweens/tween_scale.hpp>
 
 void StateGame::doInternalCreate()
 {
@@ -39,6 +41,23 @@ void StateGame::doInternalCreate()
         add(std::make_shared<jt::Timer>(
             0.5f, [this]() { resetInputQueue(); }, 1));
     });
+
+    m_inputQueue->setAddInputCallback(
+        [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
+            for (auto& i : icons) {
+                i->setScale(jt::Vector2f { 2.0f, 2.0f });
+
+                auto tws = jt::TweenScale::create(
+                    i, 0.3f, jt::Vector2f { 2.0f, 2.0f }, jt::Vector2f { 1.0f, 1.0f });
+                add(tws);
+
+                jt::Color const startColor { 255, 255, 255, 0 };
+                jt::Color const endColor { 255, 255, 255, 255 };
+                auto twc = jt::TweenColor::create(i, 0.3f, startColor, endColor);
+                add(twc);
+            }
+        });
+
     add(m_inputQueue);
 
     m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));

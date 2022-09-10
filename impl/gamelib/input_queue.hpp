@@ -14,7 +14,8 @@ public:
 
     void setAllInputs(std::vector<std::shared_ptr<DanceInputInterface>> const& allInputs);
     void setWrongInputCallback(std::function<void(void)> const& cb);
-
+    void setAddInputCallback(
+        std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
     void clear();
 
     std::vector<std::shared_ptr<jt::DrawableInterface>> getAllIcons() const;
@@ -25,8 +26,10 @@ private:
     std::vector<std::shared_ptr<DanceInputInterface>> m_allInputs;
 
     std::function<void(void)> m_wrongInputCallback;
+    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_addInputCallback;
 
     float m_inputBlockedFor = 0.0f;
+    std::size_t m_currentInputIndex { 0U };
 
     void doCreate() override;
     void doUpdate(float const elapsed) override;
@@ -36,6 +39,7 @@ private:
     void checkForInput();
 
     bool canTakeInput() const;
+    std::shared_ptr<DanceInputInterface> getCurrentInput() const;
 };
 
 #endif // ALAKAJAM16_INPUT_QUEUE_HPP

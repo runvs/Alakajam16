@@ -3,7 +3,12 @@
 #include <game_interface.hpp>
 #include <iostream>
 
-void InputQueue::add(std::shared_ptr<DanceInputInterface> input) { m_inputs.push_back(input); }
+void InputQueue::add(std::shared_ptr<DanceInputInterface> input)
+{
+    m_inputs.push_back(input);
+    m_addInputCallback(input->getIcon()->getAllDrawables());
+}
+
 void InputQueue::doCreate() { }
 void InputQueue::doUpdate(float const elapsed)
 {
@@ -19,8 +24,10 @@ void InputQueue::doUpdate(float const elapsed)
 
 void InputQueue::checkForInput()
 {
-    auto expectedInput = m_inputs.front();
-
+    auto expectedInput = getCurrentInput();
+    if (expectedInput == nullptr) {
+        return;
+    }
     for (auto const& otherInput : m_allInputs) {
         if (otherInput->getType() == expectedInput->getType()) {
             continue;
@@ -38,7 +45,7 @@ void InputQueue::checkForInput()
 
     if (expectedInput->correctInputPressed(getGame()->input())) {
         std::cout << "correct\n";
-        m_inputs.pop_front();
+        m_currentInputIndex++;
         return;
     }
 }
@@ -72,12 +79,25 @@ void InputQueue::setAllInputs(std::vector<std::shared_ptr<DanceInputInterface>> 
 {
     m_allInputs = allInputs;
 }
+
 void InputQueue::setWrongInputCallback(std::function<void(void)> const& cb)
 {
     m_wrongInputCallback = cb;
 }
+void InputQueue::setAddInputCallback(
+    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb)
+{
+    m_addInputCallback = cb;
+}
+
 void InputQueue::clear() { m_inputs.clear(); }
-bool InputQueue::canTakeInput() const { return m_inputBlockedFor <= 0.0f; }
+bool InputQueue::canTakeInput() const
+{
+    if (getCurrentInput() == nullptr) {
+        return false;
+    }
+    return m_inputBlockedFor <= 0.0f;
+}
 std::vector<std::shared_ptr<jt::DrawableInterface>> InputQueue::getAllIcons() const
 {
     std::vector<std::shared_ptr<jt::DrawableInterface>> allIcons;
@@ -87,4 +107,14 @@ std::vector<std::shared_ptr<jt::DrawableInterface>> InputQueue::getAllIcons() co
         }
     }
     return allIcons;
+}
+std::shared_ptr<DanceInputInterface> InputQueue::getCurrentInput() const
+{
+    if (m_inputs.empty()) {
+        return nullptr;
+    }
+    if (m_currentInputIndex >= m_inputs.size()) {
+        return nullptr;
+    }
+    return m_inputs.at(m_currentInputIndex);
 }
