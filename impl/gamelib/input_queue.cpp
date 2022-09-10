@@ -6,7 +6,7 @@
 void InputQueue::add(std::shared_ptr<DanceInputInterface> input)
 {
     m_inputs.push_back(input);
-    m_addInputCallback(input->getIcon()->getAllDrawables());
+    //    m_addInputCallback(input->getIcon()->getAllDrawables());
 }
 
 void InputQueue::doCreate() { }

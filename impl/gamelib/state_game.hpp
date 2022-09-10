@@ -3,6 +3,7 @@
 
 #include "pirate.hpp"
 #include "timer.hpp"
+#include <audio/intro_looping_sound_with_effect.hpp>
 #include <box2dwrapper/box2d_world_interface.hpp>
 #include <game_state.hpp>
 #include <input_queue.hpp>

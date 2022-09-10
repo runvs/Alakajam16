@@ -128,6 +128,7 @@ void StateGame::createQueue()
             ic->flash(0.45f, jt::colors::Red);
         }
         m_score--;
+        m_hud->getObserverScoreP1()->notify(m_score);
         if (m_score <= 0) {
             m_score = 0;
         }
@@ -135,25 +136,6 @@ void StateGame::createQueue()
         add(std::make_shared<jt::Timer>(
             0.5f, [this]() { resetInputQueue(); }, 1));
     });
-
-    m_inputQueue->setAddInputCallback(
-        [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
-            getGame()->logger().info("add input");
-            for (auto& i : icons) {
-                i->setScale(jt::Vector2f { 2.0f, 2.0f });
-
-                auto tws = jt::TweenScale::create(
-                    i, 0.3f, jt::Vector2f { 2.0f, 2.0f }, jt::Vector2f { 1.0f, 1.0f });
-                add(tws);
-
-                jt::Color const startColor { 255, 255, 255, 0 };
-                jt::Color const endColor { 255, 255, 255, 255 };
-                auto twc = jt::TweenColor::create(i, 0.3f, startColor, endColor);
-                twc->addCompleteCallback(
-                    [this]() { getGame()->gfx().camera().shake(0.15f, 5.0f); });
-                add(twc);
-            }
-        });
 
     m_inputQueue->setHideCallback(
         [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
@@ -229,7 +211,25 @@ void StateGame::addInputsToQueue(std::size_t numberOfInputsToAdd)
 {
     for (auto i = 0; i != numberOfInputsToAdd; ++i) {
         auto t = std::make_shared<jt::Timer>(
-            0.75f * i, [this]() { m_inputQueue->add(createRandomDanceInput(textureManager())); },
+            0.75f * i,
+            [this]() {
+                auto input = createRandomDanceInput(textureManager());
+                m_inputQueue->add(input);
+
+                getGame()->logger().debug("add input");
+                for (auto& i : input->getIcon()->getAllDrawables()) {
+                    i->setScale(jt::Vector2f { 5.0f, 5.0f });
+                    i->setColor(jt::Color { 255, 255, 255, 0 });
+                    auto tws = jt::TweenScale::create(
+                        i, 0.4f, jt::Vector2f { 5.0f, 5.0f }, jt::Vector2f { 1.0f, 1.0f });
+                    add(tws);
+
+                    auto twa = jt::TweenAlpha::create(i, 0.4f, 0, 255);
+                    twa->addCompleteCallback(
+                        [this]() { getGame()->gfx().camera().shake(0.15f, 5.0f); });
+                    add(twa);
+                }
+            },
             1);
         add(t);
     }

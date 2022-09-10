@@ -1,4 +1,5 @@
 ﻿#include "state_menu.hpp"
+#include <audio/intro_looping_sound_with_effect.hpp>
 #include <build_info.hpp>
 #include <color/color.hpp>
 #include <drawable_helpers.hpp>
@@ -8,6 +9,7 @@
 #include <lerp.hpp>
 #include <log/license_info.hpp>
 #include <math_helper.hpp>
+#include <oalpp/effects/utility/gain.hpp>
 #include <screeneffects/vignette.hpp>
 #include <shape.hpp>
 #include <sprite.hpp>
@@ -19,7 +21,6 @@
 #include <tweens/tween_position.hpp>
 #include <tweens/tween_scale.hpp>
 #include <algorithm>
-#include <iostream>
 
 void StateMenu::doInternalCreate()
 {
@@ -33,6 +34,11 @@ void StateMenu::doInternalCreate()
 
     getGame()->stateManager().setTransition(std::make_shared<jt::StateManagerTransitionFadeToBlack>(
         GP::GetScreenSize(), textureManager()));
+
+    oalpp::effects::utility::Gain gain { 1.0f };
+    auto bgm = getGame()->audio().addPermanentSound(
+        "bgm", "assets/bgm_intro.mp3", "assets/bgm_loop.mp3", gain);
+    bgm->play();
 }
 
 void StateMenu::createVignette()
