@@ -26,10 +26,14 @@ void StateGame::doInternalCreate()
     m_background->update(0.0f);
 
     m_inputQueue = std::make_shared<InputQueue>();
+    m_inputQueue->setAllInputs({ std::make_shared<DanceInputUp>(textureManager()),
+        std::make_shared<DanceInputDown>(textureManager()) });
+    m_inputQueue->setWrongInputCallback([this]() { m_inputQueue->clear(); });
+    add(m_inputQueue);
+
     m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));
     m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));
     m_inputQueue->add(std::make_shared<DanceInputDown>(textureManager()));
-    add(m_inputQueue);
 
     createPlayer();
 

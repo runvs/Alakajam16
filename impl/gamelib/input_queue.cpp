@@ -18,11 +18,23 @@ void InputQueue::doUpdate(float const elapsed)
 void InputQueue::checkForInput()
 {
     auto expectedInput = m_inputs.front();
+
+    for (auto const& otherInput : m_allInputs) {
+        if (otherInput->correctInputPressed(getGame()->input())) {
+            std::cout << "incorrect!!!\n";
+
+            if (m_wrongInputCallback) {
+                m_wrongInputCallback();
+            }
+            return;
+        }
+    }
+
     if (expectedInput->correctInputPressed(getGame()->input())) {
         std::cout << "correct\n";
         m_inputs.pop_front();
+        return;
     }
-    // TODO check for incorrect input
 }
 
 void InputQueue::updateIcons(float elapsed)
@@ -51,3 +63,12 @@ void InputQueue::doDraw() const
         }
     }
 }
+void InputQueue::setAllInputs(std::vector<std::shared_ptr<DanceInputInterface>> const& allInputs)
+{
+    m_allInputs = allInputs;
+}
+void InputQueue::setWrongInputCallback(std::function<void(void)> const& cb)
+{
+    m_wrongInputCallback = cb;
+}
+void InputQueue::clear() { m_inputs.clear(); }
