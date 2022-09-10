@@ -1,9 +1,6 @@
 ﻿#include "state_game.hpp"
-<<<<<<< HEAD
 #include "dance_input/dance_input_left.hpp"
 #include "dance_input/dance_input_right.hpp"
-=======
->>>>>>> 68199e9fdbe59486eccdcedb923097244f0a670d
 #include "random/random.hpp"
 #include <box2dwrapper/box2d_world_impl.hpp>
 #include <color/color.hpp>
@@ -37,13 +34,9 @@ void StateGame::doInternalCreate()
 
     m_inputQueue = std::make_shared<InputQueue>();
     m_inputQueue->setAllInputs({ std::make_shared<DanceInputUp>(textureManager()),
-<<<<<<< HEAD
         std::make_shared<DanceInputDown>(textureManager()),
         std::make_shared<DanceInputLeft>(textureManager()),
         std::make_shared<DanceInputRight>(textureManager()) });
-=======
-        std::make_shared<DanceInputDown>(textureManager()) });
->>>>>>> 68199e9fdbe59486eccdcedb923097244f0a670d
 
     m_inputQueue->setWrongInputCallback([this]() {
         getGame()->logger().info("wrong input callback invoked");
@@ -148,21 +141,14 @@ std::shared_ptr<DanceInputInterface> createRandomDanceInput(jt::TextureManagerIn
         return std::make_shared<DanceInputUp>(tm);
     } else if (randomValue == 1) {
         return std::make_shared<DanceInputDown>(tm);
-<<<<<<< HEAD
     } else if (randomValue == 2) {
-
         return std::make_shared<DanceInputLeft>(tm);
     } else {
         return std::make_shared<DanceInputRight>(tm);
-=======
-    } else {
-        // TODO
-        return std::make_shared<DanceInputUp>(tm);
->>>>>>> 68199e9fdbe59486eccdcedb923097244f0a670d
     }
 }
 
-// call this only once
+// call this only once to add multiple inputs
 void StateGame::addInputsToQueue(std::size_t numberOfInputsToAdd)
 {
     for (auto i = 0; i != numberOfInputsToAdd; ++i) {

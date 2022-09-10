@@ -1,10 +1,6 @@
 
 #include "dance_input_up.hpp"
-<<<<<<< HEAD
-#include "dance_input_icon/dance_input_icon_up.hpp"
-=======
-#include <dance_input_icon/dance_input_icon.hpp>
->>>>>>> 68199e9fdbe59486eccdcedb923097244f0a670d
+#include <dance_input_icon/dance_input_icon_up.hpp>
 
 DanceInputUp::DanceInputUp(jt::TextureManagerInterface& tm)
 {
