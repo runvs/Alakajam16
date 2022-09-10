@@ -12,6 +12,7 @@ void InputQueue::add(std::shared_ptr<DanceInputInterface> input)
 void InputQueue::doCreate() { }
 void InputQueue::doUpdate(float const elapsed)
 {
+    std::cout << m_inputs.size() << std::endl;
     if (m_inputs.empty()) {
         return;
     }
@@ -49,8 +50,12 @@ void InputQueue::checkForInput()
             m_correctInputCallback(getCurrentInput()->getIcon()->getAllDrawables());
         }
         m_currentInputIndex++;
-
-        return;
+        if (m_currentInputIndex >= m_inputs.size()) {
+            if (m_allCorrectInputCallback) {
+                m_allCorrectInputCallback(getAllIcons());
+                return;
+            }
+        }
     }
 }
 
@@ -95,6 +100,12 @@ void InputQueue::setCorrectCallback(
     m_correctInputCallback = cb;
 }
 
+void InputQueue::setAllCorrectCallback(
+    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb)
+{
+    m_allCorrectInputCallback = cb;
+}
+
 void InputQueue::setAddInputCallback(
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb)
 {
@@ -107,9 +118,19 @@ void InputQueue::setHideCallback(
     m_hideCallback = cb;
 }
 
-void InputQueue::clear() { m_inputs.clear(); }
+void InputQueue::clear()
+{
+    getGame()->logger().info("clear queue");
+    m_inputs.clear();
+    m_currentInputIndex = 0;
+    m_isHidden = false;
+}
+
 bool InputQueue::canTakeInput() const
 {
+    if (!m_isHidden) {
+        return false;
+    }
     if (getCurrentInput() == nullptr) {
         return false;
     }

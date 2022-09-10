@@ -22,6 +22,8 @@ public:
     void setCorrectCallback(
         std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
 
+    void setAllCorrectCallback(
+        std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
     void clear();
     void hide();
 
@@ -34,6 +36,8 @@ private:
 
     std::function<void(void)> m_wrongInputCallback;
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_correctInputCallback;
+    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)>
+        m_allCorrectInputCallback;
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_addInputCallback;
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_hideCallback;
 

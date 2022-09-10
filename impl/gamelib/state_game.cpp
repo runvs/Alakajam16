@@ -48,7 +48,32 @@ void StateGame::doInternalCreate()
                 add(twa);
             }
         });
-    
+
+    m_inputQueue->setAllCorrectCallback(
+        [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
+            getGame()->logger().info("all correct input callback");
+            for (auto& i : icons) {
+                i->flash(0.25f, jt::colors::Green);
+
+                auto twa = std::make_shared<jt::TweenAlpha>(i, 0.45f, 255, 0);
+                add(twa);
+
+                auto tws = std::make_shared<jt::TweenScale>(
+                    i, 0.45f, jt::Vector2f { 1.0f, 1.0f }, jt::Vector2f { 0.0f, 0.0f });
+                add(tws);
+            }
+            m_scoreP1++;
+            m_hud->getObserverScoreP1()->notify(m_scoreP1);
+            auto t = std::make_shared<jt::Timer>(
+                1.0f,
+                [this]() {
+                    m_inputQueue->clear();
+                    addInputsToQueue(4);
+                },
+                1);
+            add(t);
+        });
+
     m_inputQueue->setWrongInputCallback([this]() {
         getGame()->logger().info("wrong input callback");
         auto icons = m_inputQueue->getAllIcons();
@@ -74,6 +99,8 @@ void StateGame::doInternalCreate()
                 jt::Color const startColor { 255, 255, 255, 0 };
                 jt::Color const endColor { 255, 255, 255, 255 };
                 auto twc = jt::TweenColor::create(i, 0.3f, startColor, endColor);
+                twc->addCompleteCallback(
+                    [this]() { getGame()->gfx().camera().shake(0.15f, 5.0f); });
                 add(twc);
             }
         });
@@ -109,14 +136,6 @@ void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
         // update game logic here
-        if (getGame()->input().keyboard()->justPressed(jt::KeyCode::A)) {
-            m_scoreP1++;
-            m_hud->getObserverScoreP1()->notify(m_scoreP1);
-        }
-        if (getGame()->input().keyboard()->justPressed(jt::KeyCode::D)) {
-            m_scoreP2++;
-            m_hud->getObserverScoreP2()->notify(m_scoreP2);
-        }
     }
 
     m_background->update(elapsed);
