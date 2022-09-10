@@ -40,6 +40,7 @@ private:
     void endGame();
     void createPlayer();
     void resetInputQueue();
+    void addInputsToQueue(std::size_t numberOfInputsToAdd);
 };
 
 #endif
