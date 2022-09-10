@@ -19,8 +19,7 @@ public:
         std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
     void setHideCallback(
         std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
-    void setCorrectCallback(
-        std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
+    void setCorrectCallback(std::function<void(std::shared_ptr<DanceInputInterface>)> const& cb);
 
     void setAllCorrectCallback(
         std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb);
@@ -28,14 +27,13 @@ public:
     void hide();
 
     std::vector<std::shared_ptr<jt::DrawableInterface>> getAllIcons() const;
-    std::vector<std::shared_ptr<DanceInputInterface>> getAllInputs() const;
 
 private:
     std::deque<std::shared_ptr<DanceInputInterface>> m_inputs;
     std::vector<std::shared_ptr<DanceInputInterface>> m_allInputs;
 
     std::function<void(void)> m_wrongInputCallback;
-    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_correctInputCallback;
+    std::function<void(std::shared_ptr<DanceInputInterface>)> m_correctInputCallback;
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)>
         m_allCorrectInputCallback;
     std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> m_addInputCallback;
@@ -51,6 +49,8 @@ private:
 
     void updateIcons(float elapsed);
     void checkForInput();
+    // returns true if invalid input has been pressed
+    bool checkForInvalidInput() const;
 
     bool canTakeInput() const;
     std::shared_ptr<DanceInputInterface> getCurrentInput() const;

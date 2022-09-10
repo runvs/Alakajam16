@@ -32,22 +32,73 @@ void StateGame::doInternalCreate()
     m_background->setIgnoreCamMovement(true);
     m_background->update(0.0f);
 
+    createQueue();
+
+    addInputsToQueue(2);
+
+    createPirate();
+
+    m_vignette = std::make_shared<jt::Vignette>(GP::GetScreenSize());
+    add(m_vignette);
+    m_hud = std::make_shared<Hud>();
+    add(m_hud);
+
+    // StateGame will call drawObjects itself.
+    setAutoDraw(false);
+}
+
+std::string getAnimNameFromType(eDanceInput input)
+{
+    std::map<eDanceInput, std::string> conversion { { eDanceInput::Up, "up" },
+        { eDanceInput::Down, "down" }, { eDanceInput::Left, "Links" },
+        { eDanceInput::Right, "Rechts" } };
+
+    return conversion[input];
+}
+
+int getAnimRepeatFromType(eDanceInput input)
+{
+    std::map<eDanceInput, int> conversion { { eDanceInput::Up, 3 }, { eDanceInput::Down, 3 },
+        { eDanceInput::Left, 2 }, { eDanceInput::Right, 2 } };
+
+    return conversion[input];
+}
+
+void StateGame::createQueue()
+{
     m_inputQueue = std::make_shared<InputQueue>();
     m_inputQueue->setAllInputs({ std::make_shared<DanceInputUp>(textureManager()),
         std::make_shared<DanceInputDown>(textureManager()),
         std::make_shared<DanceInputLeft>(textureManager()),
         std::make_shared<DanceInputRight>(textureManager()) });
 
-    m_inputQueue->setCorrectCallback(
-        [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
-            getGame()->logger().info("correct input callback");
-            for (auto& i : icons) {
-                i->flash(0.25f, jt::colors::Green);
+    m_inputQueue->setCorrectCallback([this](std::shared_ptr<DanceInputInterface> input) {
+        getGame()->logger().info("correct input callback");
 
-                auto twa = std::make_shared<jt::TweenAlpha>(i, 0.25f, 0, 255);
-                add(twa);
-            }
-        });
+        // flash/tween sprites
+        for (auto& i : input->getIcon()->getAllDrawables()) {
+            i->flash(0.25f, jt::colors::Green);
+            auto twa = std::make_shared<jt::TweenAlpha>(i, 0.25f, 0, 255);
+            add(twa);
+        }
+
+        // play pirate animation
+        auto const currentAnimName = m_pirate->m_anim->getCurrentAnimationName();
+        auto const nextAnimName = getAnimNameFromType(input->getType());
+        if (currentAnimName != nextAnimName) {
+            m_pirate->m_anim->play(nextAnimName, 0, true);
+        }
+
+        // create timer to make pirate go back to idle
+        if (m_pirateReturnToIdleTimer) {
+            m_pirateReturnToIdleTimer->cancel();
+        }
+        auto const time
+            = m_pirate->m_anim->getCurrentAnimTotalTime() * getAnimRepeatFromType(input->getType());
+        m_pirateReturnToIdleTimer = std::make_shared<jt::Timer>(
+            time, [this]() { m_pirate->m_anim->play("down", 0, true); }, 1);
+        add(m_pirateReturnToIdleTimer);
+    });
 
     m_inputQueue->setAllCorrectCallback(
         [this](std::vector<std::shared_ptr<jt::DrawableInterface>> const& icons) {
@@ -62,8 +113,8 @@ void StateGame::doInternalCreate()
                     i, 0.45f, jt::Vector2f { 1.0f, 1.0f }, jt::Vector2f { 0.0f, 0.0f });
                 add(tws);
             }
-            m_scoreP1++;
-            m_hud->getObserverScoreP1()->notify(m_scoreP1);
+            m_score++;
+            m_hud->getObserverScoreP1()->notify(m_score);
             auto t = std::make_shared<jt::Timer>(
                 1.0f, [this]() { resetInputQueue(); }, 1);
             add(t);
@@ -76,7 +127,10 @@ void StateGame::doInternalCreate()
 
             ic->flash(0.45f, jt::colors::Red);
         }
-        m_scoreP1--;
+        m_score--;
+        if (m_score <= 0) {
+            m_score = 0;
+        }
 
         add(std::make_shared<jt::Timer>(
             0.5f, [this]() { resetInputQueue(); }, 1));
@@ -111,26 +165,18 @@ void StateGame::doInternalCreate()
         });
 
     add(m_inputQueue);
-
-    addInputsToQueue(2);
-
-    createPlayer();
-
-    m_vignette = std::make_shared<jt::Vignette>(GP::GetScreenSize());
-    add(m_vignette);
-    m_hud = std::make_shared<Hud>();
-    add(m_hud);
-
-    // StateGame will call drawObjects itself.
-    setAutoDraw(false);
 }
 void StateGame::resetInputQueue()
 {
     m_inputQueue->clear();
-    addInputsToQueue(m_scoreP1 + 2);
+    addInputsToQueue(m_score + 2);
 }
 
-void StateGame::createPlayer() { }
+void StateGame::createPirate()
+{
+    m_pirate = std::make_shared<Pirate>();
+    add(m_pirate);
+}
 
 void StateGame::doInternalUpdate(float const elapsed)
 {

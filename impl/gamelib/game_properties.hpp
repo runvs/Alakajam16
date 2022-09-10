@@ -32,6 +32,8 @@ public:
     static jt::Palette getPalette();
 
     static jt::Vector2f PlayerSize();
+    static jt::Vector2f PiratePosition();
+    static jt::Vector2f QueueOffset();
 };
 
 #endif

@@ -1,6 +1,6 @@
-
 #include "input_queue.hpp"
 #include <game_interface.hpp>
+#include <game_properties.hpp>
 #include <iostream>
 
 void InputQueue::add(std::shared_ptr<DanceInputInterface> input)
@@ -22,31 +22,39 @@ void InputQueue::doUpdate(float const elapsed)
     updateIcons(elapsed);
 }
 
-void InputQueue::checkForInput()
+bool InputQueue::checkForInvalidInput() const
 {
     auto expectedInput = getCurrentInput();
-    if (expectedInput == nullptr) {
-        return;
-    }
     for (auto const& otherInput : m_allInputs) {
         if (otherInput->getType() == expectedInput->getType()) {
             continue;
         }
         if (otherInput->correctInputPressed(getGame()->input())) {
             std::cout << "incorrect!!!\n";
-            m_inputBlockedFor = 0.5f;
 
             if (m_wrongInputCallback) {
                 m_wrongInputCallback();
             }
-            return;
+            return true;
         }
     }
+    return false;
+}
 
+void InputQueue::checkForInput()
+{
+    auto expectedInput = getCurrentInput();
+    if (expectedInput == nullptr) {
+        return;
+    }
+    if (checkForInvalidInput()) {
+        m_inputBlockedFor = 0.5f;
+        return;
+    }
     if (expectedInput->correctInputPressed(getGame()->input())) {
         std::cout << "correct\n";
         if (m_correctInputCallback) {
-            m_correctInputCallback(getCurrentInput()->getIcon()->getAllDrawables());
+            m_correctInputCallback(getCurrentInput());
         }
         m_currentInputIndex++;
         if (m_currentInputIndex >= m_inputs.size()) {
@@ -66,7 +74,7 @@ void InputQueue::updateIcons(float elapsed)
         for (auto j = 0U; j != drawables.size(); ++j) {
             auto& icon = drawables.at(j);
 
-            auto const offset = jt::Vector2f { 30.0f, 100.0f };
+            auto const offset = GP::QueueOffset();
             icon->setPosition(offset + jt::Vector2f { 24.0f * i + -20.0f * j });
             icon->update(elapsed);
         }
@@ -94,7 +102,7 @@ void InputQueue::setWrongInputCallback(std::function<void(void)> const& cb)
 }
 
 void InputQueue::setCorrectCallback(
-    std::function<void(std::vector<std::shared_ptr<jt::DrawableInterface>>)> const& cb)
+    std::function<void(std::shared_ptr<DanceInputInterface>)> const& cb)
 {
     m_correctInputCallback = cb;
 }
@@ -162,9 +170,4 @@ void InputQueue::hide()
         m_hideCallback(getAllIcons());
     }
     m_isHidden = true;
-}
-
-std::vector<std::shared_ptr<DanceInputInterface>> InputQueue::getAllInputs() const
-{
-    return m_allInputs;
 }

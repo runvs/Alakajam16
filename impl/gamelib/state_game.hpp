@@ -1,6 +1,8 @@
 ﻿#ifndef GAME_STATE_GAME_HPP
 #define GAME_STATE_GAME_HPP
 
+#include "pirate.hpp"
+#include "timer.hpp"
 #include <box2dwrapper/box2d_world_interface.hpp>
 #include <game_state.hpp>
 #include <input_queue.hpp>
@@ -21,26 +23,29 @@ public:
     std::string getName() const override;
 
 private:
-    std::shared_ptr<jt::Shape> m_background;
-    std::shared_ptr<jt::Vignette> m_vignette;
-    std::shared_ptr<Hud> m_hud;
+    std::shared_ptr<jt::Shape> m_background { nullptr };
+    std::shared_ptr<jt::Vignette> m_vignette { nullptr };
+    std::shared_ptr<Hud> m_hud { nullptr };
 
-    std::shared_ptr<InputQueue> m_inputQueue;
+    std::shared_ptr<InputQueue> m_inputQueue { nullptr };
+
+    std::shared_ptr<Pirate> m_pirate { nullptr };
+    std::shared_ptr<jt::Timer> m_pirateReturnToIdleTimer { nullptr };
 
     bool m_running { true };
     bool m_hasEnded { false };
 
-    int m_scoreP1 { 0 };
-    int m_scoreP2 { 0 };
+    int m_score { 0 };
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
     void doInternalDraw() const override;
 
     void endGame();
-    void createPlayer();
+    void createPirate();
     void resetInputQueue();
     void addInputsToQueue(std::size_t numberOfInputsToAdd);
+    void createQueue();
 };
 
 #endif
