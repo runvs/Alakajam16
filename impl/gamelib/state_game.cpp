@@ -9,6 +9,7 @@
 #include <shape.hpp>
 #include <sprite.hpp>
 #include <state_menu.hpp>
+#include <timer.hpp>
 #include <tweens/tween_alpha.hpp>
 
 void StateGame::doInternalCreate()
@@ -28,7 +29,16 @@ void StateGame::doInternalCreate()
     m_inputQueue = std::make_shared<InputQueue>();
     m_inputQueue->setAllInputs({ std::make_shared<DanceInputUp>(textureManager()),
         std::make_shared<DanceInputDown>(textureManager()) });
-    m_inputQueue->setWrongInputCallback([this]() { m_inputQueue->clear(); });
+    m_inputQueue->setWrongInputCallback([this]() {
+        auto icons = m_inputQueue->getAllIcons();
+        for (auto& ic : icons) {
+
+            ic->flash(0.45f, jt::colors::Red);
+        }
+
+        add(std::make_shared<jt::Timer>(
+            0.5f, [this]() { resetInputQueue(); }, 1));
+    });
     add(m_inputQueue);
 
     m_inputQueue->add(std::make_shared<DanceInputUp>(textureManager()));
@@ -45,6 +55,7 @@ void StateGame::doInternalCreate()
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
 }
+void StateGame::resetInputQueue() { m_inputQueue->clear(); }
 
 void StateGame::createPlayer() { }
 
