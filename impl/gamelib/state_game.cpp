@@ -65,12 +65,7 @@ void StateGame::doInternalCreate()
             m_scoreP1++;
             m_hud->getObserverScoreP1()->notify(m_scoreP1);
             auto t = std::make_shared<jt::Timer>(
-                1.0f,
-                [this]() {
-                    m_inputQueue->clear();
-                    addInputsToQueue(4);
-                },
-                1);
+                1.0f, [this]() { resetInputQueue(); }, 1);
             add(t);
         });
 
@@ -81,6 +76,7 @@ void StateGame::doInternalCreate()
 
             ic->flash(0.45f, jt::colors::Red);
         }
+        m_scoreP1--;
 
         add(std::make_shared<jt::Timer>(
             0.5f, [this]() { resetInputQueue(); }, 1));
@@ -116,7 +112,7 @@ void StateGame::doInternalCreate()
 
     add(m_inputQueue);
 
-    addInputsToQueue(3);
+    addInputsToQueue(2);
 
     createPlayer();
 
@@ -128,7 +124,11 @@ void StateGame::doInternalCreate()
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
 }
-void StateGame::resetInputQueue() { m_inputQueue->clear(); }
+void StateGame::resetInputQueue()
+{
+    m_inputQueue->clear();
+    addInputsToQueue(m_scoreP1 + 2);
+}
 
 void StateGame::createPlayer() { }
 

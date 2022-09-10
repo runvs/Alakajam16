@@ -12,7 +12,6 @@ void InputQueue::add(std::shared_ptr<DanceInputInterface> input)
 void InputQueue::doCreate() { }
 void InputQueue::doUpdate(float const elapsed)
 {
-    std::cout << m_inputs.size() << std::endl;
     if (m_inputs.empty()) {
         return;
     }
@@ -67,7 +66,7 @@ void InputQueue::updateIcons(float elapsed)
         for (auto j = 0U; j != drawables.size(); ++j) {
             auto& icon = drawables.at(j);
 
-            auto const offset = jt::Vector2f { 100.0f, 100.0f };
+            auto const offset = jt::Vector2f { 30.0f, 100.0f };
             icon->setPosition(offset + jt::Vector2f { 24.0f * i + -20.0f * j });
             icon->update(elapsed);
         }
