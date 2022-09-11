@@ -152,7 +152,7 @@ void StateGame::createQueue()
 void StateGame::resetInputQueue()
 {
     m_inputQueue->clear();
-    addInputsToQueue(m_score + 2);
+    addInputsToQueue(m_score);
 }
 
 void StateGame::createPirate()
@@ -171,6 +171,9 @@ void StateGame::doInternalUpdate(float const elapsed)
 {
     if (m_running) {
         // update game logic here
+        if (m_score == 8) {
+            endGame();
+        }
     }
 
     m_background->update(elapsed);

@@ -38,7 +38,7 @@ private:
     bool m_running { true };
     bool m_hasEnded { false };
 
-    int m_score { 0 };
+    int m_score { 1 };
 
     void doInternalCreate() override;
     void doInternalUpdate(float const elapsed) override;
