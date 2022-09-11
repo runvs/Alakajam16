@@ -27,7 +27,6 @@ void StateGame::doInternalCreate()
     using jt::TweenAlpha;
 
     m_background = std::make_shared<jt::Animation>();
-
     m_background->add("assets/Beach.png", "idle", jt::Vector2u { 240, 160 }, { 0, 1, 2, 3 }, 0.3f,
         textureManager());
     m_background->play("idle");

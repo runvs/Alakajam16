@@ -1,6 +1,7 @@
 ﻿#ifndef GAME_STATE_MENU_HPP
 #define GAME_STATE_MENU_HPP
 
+#include "screeneffects/stars.hpp"
 #include <game_state.hpp>
 
 namespace jt {
@@ -20,7 +21,7 @@ public:
     void setScore(int s) { m_score = s; };
 
 private:
-    std::shared_ptr<jt::Shape> m_background;
+    std::shared_ptr<jt::Animation> m_background;
 
     std::shared_ptr<jt::Text> m_textTitle;
     std::shared_ptr<jt::Text> m_textStart;

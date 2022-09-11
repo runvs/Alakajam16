@@ -2,6 +2,7 @@
 #include <audio/intro_looping_sound_with_effect.hpp>
 #include <build_info.hpp>
 #include <color/color.hpp>
+
 #include <drawable_helpers.hpp>
 #include <game_interface.hpp>
 #include <game_properties.hpp>
@@ -49,8 +50,10 @@ void StateMenu::createVignette()
 
 void StateMenu::createShapes()
 {
-    m_background
-        = jt::dh::createShapeRect(GP::GetScreenSize(), GP::PaletteBackground(), textureManager());
+    m_background = std::make_shared<jt::Animation>();
+    m_background->add("assets/Beach.png", "idle", jt::Vector2u { 240, 160 }, { 0, 1, 2, 3 }, 0.3f,
+        textureManager());
+    m_background->play("idle");
     m_overlay = jt::dh::createShapeRect(GP::GetScreenSize(), jt::colors::Black, textureManager());
 }
 
@@ -73,11 +76,11 @@ void StateMenu::createTextExplanation()
 void StateMenu::createTextCredits()
 {
     m_textCredits = jt::dh::createText(renderTarget(),
-        "Created by " + GP::AuthorName() + " for " + GP::JamName() + "\n" + GP::JamDate()
+        "Created by\n" + GP::AuthorName() + "\nfor " + GP::JamName() + "\n" + GP::JamDate()
             + "\n\nF9 for License Information",
         16U, GP::PaletteFontCredits());
     m_textCredits->setTextAlign(jt::Text::TextAlign::LEFT);
-    m_textCredits->setPosition({ 10, GP::GetScreenSize().y - 70 });
+    m_textCredits->setPosition({ 10, GP::GetScreenSize().y - 80 });
     m_textCredits->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 1, 1 });
 
     m_textVersion = jt::dh::createText(renderTarget(), "", 16U, GP::PaletteFontCredits());
@@ -104,8 +107,9 @@ void StateMenu::createTextStart()
 void StateMenu::createTextTitle()
 {
     float half_width = GP::GetScreenSize().x / 2;
-    m_textTitle = jt::dh::createText(renderTarget(), GP::GameName(), 48U, GP::PaletteFontFront());
-    m_textTitle->setPosition({ half_width, 20 });
+    m_textTitle = jt::dh::createText(renderTarget(), GP::GameName(), 32U, GP::PaletteFontFront());
+    m_textTitle->setTextAlign(jt::Text::TextAlign::LEFT);
+    m_textTitle->setPosition({ 20, 0 });
     m_textTitle->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 4, 4 });
 }
 
@@ -229,7 +233,6 @@ void StateMenu::startTransitionToStateGame()
 void StateMenu::doInternalDraw() const
 {
     m_background->draw(renderTarget());
-
     m_textTitle->draw(renderTarget());
     m_textStart->draw(renderTarget());
     m_textExplanation->draw(renderTarget());
