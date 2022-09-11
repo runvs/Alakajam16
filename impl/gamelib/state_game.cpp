@@ -119,6 +119,7 @@ void StateGame::createQueue()
 
             m_score++;
             m_hud->getObserverScoreP1()->notify(m_score);
+
             auto t = std::make_shared<jt::Timer>(
                 1.0f, [this]() { resetInputQueue(); }, 1);
             add(t);
@@ -130,6 +131,7 @@ void StateGame::createQueue()
         for (auto& ic : icons) {
 
             ic->flash(0.45f, jt::colors::Red);
+            ic->shake(0.45f, 2.0f, 0.01f);
         }
         m_score--;
         m_hud->getObserverScoreP1()->notify(m_score);
