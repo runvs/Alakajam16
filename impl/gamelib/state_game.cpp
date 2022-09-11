@@ -55,6 +55,7 @@ void StateGame::doInternalCreate()
     oalpp::effects::utility::Gain gain { 1.0f };
     auto bgm_chill = getGame()->audio().addPermanentSound(
         "bgm_chill", "assets/bgm_chill_intro.mp3", "assets/bgm_chill_loop.mp3", gain);
+    bgm_chill->setVolume(0.25f);
     bgm_chill->play();
 }
 
@@ -215,7 +216,9 @@ void StateGame::endGame()
     m_hasEnded = true;
     m_running = false;
     getGame()->audio().getPermanentSound("bgm_chill")->stop();
-    getGame()->stateManager().switchState(std::make_shared<StateMenu>());
+    auto state = std::make_shared<StateMenu>();
+    state->setLastTime(getAge());
+    getGame()->stateManager().switchState(state);
 }
 
 std::string StateGame::getName() const { return "State Game"; }

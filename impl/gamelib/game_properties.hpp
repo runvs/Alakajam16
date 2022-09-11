@@ -11,9 +11,9 @@ class GP {
 public:
     GP() = delete;
 
-    static std::string GameName() { return "Pirate\nWarmup"; }
+    static std::string GameName() { return ""; }
     static std::string AuthorName() { return "Laguna_999 and BloodyOrange"; }
-    static std::string JamName() { return "Alakajam16"; }
+    static std::string JamName() { return "Alakajam 16"; }
     static std::string JamDate() { return "2022-09-11"; }
     static std::string ExplanationText() { return ""; }
 

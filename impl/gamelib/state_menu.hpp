@@ -18,13 +18,13 @@ class StateMenu : public jt::GameState {
 public:
     std::string getName() const override;
 
-    void setScore(int s) { m_score = s; };
+    void setLastTime(float s);
 
 private:
     std::shared_ptr<jt::Animation> m_background;
     float timeSinceStarted = 0.0f;
 
-    std::shared_ptr<jt::Text> m_textTitle;
+    std::shared_ptr<jt::Sprite> m_textTitle;
     std::shared_ptr<jt::Text> m_textStart;
     std::shared_ptr<jt::Text> m_textExplanation;
     std::shared_ptr<jt::Text> m_textCredits;
@@ -33,7 +33,7 @@ private:
     std::shared_ptr<jt::Shape> m_overlay;
     std::shared_ptr<jt::Vignette> m_vignette;
 
-    int m_score { 0 };
+    float m_lastRunTime { 0.0f };
 
     bool m_started { false };
 

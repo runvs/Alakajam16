@@ -44,6 +44,7 @@ void StateMenu::doInternalCreate()
     oalpp::effects::utility::Gain gain { 0.0f };
     auto bgm = getGame()->audio().addPermanentSound(
         "bgm", "assets/bgm_intro.mp3", "assets/bgm_loop.mp3", gain);
+    bgm->setVolume(0.15f);
     bgm->play();
 }
 
@@ -71,8 +72,7 @@ void StateMenu::createMenuText()
 }
 void StateMenu::createTextExplanation()
 {
-    m_textExplanation
-        = jt::dh::createText(renderTarget(), GP::ExplanationText(), 16U, GP::PaletteFontFront());
+    m_textExplanation = jt::dh::createText(renderTarget(), "", 16U, GP::PaletteFontFront());
     auto const half_width = GP::GetScreenSize().x / 2.0f;
     m_textExplanation->setPosition({ half_width, 180 });
     m_textExplanation->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 2, 2 });
@@ -81,11 +81,12 @@ void StateMenu::createTextExplanation()
 void StateMenu::createTextCredits()
 {
     m_textCredits = jt::dh::createText(renderTarget(),
-        "Created by\n" + GP::AuthorName() + "\nfor " + GP::JamName() /*+ "\n" + GP::JamDate()*/
-            + "\nF9 for License Information",
+        "Last run: " + jt::MathHelper::floatToStringWithXDigits(m_lastRunTime, 1) + " s\n"
+            + GP::AuthorName() + "\nfor " + GP::JamName() /*+ "\n" + GP::JamDate()*/
+            + "\nF9 for Game Info",
         16U, GP::PaletteFontCredits());
     m_textCredits->setTextAlign(jt::Text::TextAlign::LEFT);
-    m_textCredits->setPosition({ 10, GP::GetScreenSize().y - 80 });
+    m_textCredits->setPosition({ 10, GP::GetScreenSize().y - 65 });
     m_textCredits->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 1, 1 });
 
     m_textVersion = jt::dh::createText(renderTarget(), "", 16U, GP::PaletteFontCredits());
@@ -103,19 +104,17 @@ void StateMenu::createTextCredits()
 void StateMenu::createTextStart()
 {
     auto const half_width = GP::GetScreenSize().x / 2.0f;
-    m_textStart = jt::dh::createText(
-        renderTarget(), "Press Space to start the game", 24U, GP::PaletteFontFront());
-    m_textStart->setPosition({ half_width, 150 });
+    m_textStart
+        = jt::dh::createText(renderTarget(), "Press Space to start", 16U, GP::PaletteFontCredits());
+    m_textStart->setPosition({ half_width, 50 });
     m_textStart->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 3, 3 });
 }
 
 void StateMenu::createTextTitle()
 {
-    float half_width = GP::GetScreenSize().x / 2;
-    m_textTitle = jt::dh::createText(renderTarget(), GP::GameName(), 32U, GP::PaletteFontFront());
-    m_textTitle->setTextAlign(jt::Text::TextAlign::LEFT);
-    m_textTitle->setPosition({ 20, 0 });
-    m_textTitle->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 4, 4 });
+    m_textTitle = std::make_shared<jt::Sprite>("assets/Logo.png", textureManager());
+    m_textTitle->setPosition({ 5, 5 });
+    //    m_textTitle->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 4, 4 });
 }
 
 void StateMenu::createTweens()
@@ -129,7 +128,7 @@ void StateMenu::createTweens()
 void StateMenu::createInstructionTweenColor1()
 {
     auto tc = jt::TweenColor::create(
-        m_textStart, 0.5f, GP::PaletteFontFront(), GP::PalleteFrontHighlight());
+        m_textStart, 0.5f, GP::PaletteFontCredits(), GP::PalleteFrontHighlight());
     tc->addCompleteCallback([this]() { createInstructionTweenColor2(); });
     tc->setAgePercentConversion([](float age) {
         return jt::Lerp::cubic(0.0f, 1.0f, jt::MathHelper::clamp(age, 0.0f, 1.0f));
@@ -140,7 +139,7 @@ void StateMenu::createInstructionTweenColor1()
 void StateMenu::createInstructionTweenColor2()
 {
     auto tc = jt::TweenColor::create(
-        m_textStart, 0.45f, GP::PalleteFrontHighlight(), GP::PaletteFontFront());
+        m_textStart, 0.45f, GP::PalleteFrontHighlight(), GP::PaletteFontCredits());
     tc->setAgePercentConversion([](float age) {
         return jt::Lerp::cubic(0.0f, 1.0f, jt::MathHelper::clamp(age, 0.0f, 1.0f));
     });
@@ -250,9 +249,10 @@ void StateMenu::doInternalDraw() const
     m_textStart->draw(renderTarget());
     m_textExplanation->draw(renderTarget());
     m_textCredits->draw(renderTarget());
-    m_textVersion->draw(renderTarget());
+    //    m_textVersion->draw(renderTarget());
     m_overlay->draw(renderTarget());
     m_vignette->draw();
 }
 
 std::string StateMenu::getName() const { return "State Menu"; }
+void StateMenu::setLastTime(float s) { m_lastRunTime = s; }
