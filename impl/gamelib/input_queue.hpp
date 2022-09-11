@@ -2,6 +2,7 @@
 #ifndef ALAKAJAM16_INPUT_QUEUE_HPP
 #define ALAKAJAM16_INPUT_QUEUE_HPP
 
+#include "sprite.hpp"
 #include <dance_input/dance_input_interface.hpp>
 #include <game_object.hpp>
 #include <deque>
@@ -27,10 +28,12 @@ public:
     void hide();
 
     std::vector<std::shared_ptr<jt::DrawableInterface>> getAllIcons() const;
+    std::shared_ptr<jt::Sprite> m_bubblePirate { nullptr };
 
 private:
     std::deque<std::shared_ptr<DanceInputInterface>> m_inputs;
     std::vector<std::shared_ptr<DanceInputInterface>> m_allInputs;
+    std::shared_ptr<jt::Sprite> m_bubbleParrot { nullptr };
 
     std::function<void(void)> m_wrongInputCallback;
     std::function<void(std::shared_ptr<DanceInputInterface>)> m_correctInputCallback;

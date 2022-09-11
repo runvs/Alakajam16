@@ -6,10 +6,19 @@
 void InputQueue::add(std::shared_ptr<DanceInputInterface> input)
 {
     m_inputs.push_back(input);
-    //    m_addInputCallback(input->getIcon()->getAllDrawables());
+    m_bubbleParrot->setColor(jt::colors::White);
+    m_bubblePirate->setColor(jt::colors::Transparent);
 }
 
-void InputQueue::doCreate() { }
+void InputQueue::doCreate()
+{
+    m_bubbleParrot = std::make_shared<jt::Sprite>("assets/sprechblase.png", textureManager());
+    m_bubbleParrot->setPosition(GP::QueueOffset());
+
+    m_bubblePirate = std::make_shared<jt::Sprite>("assets/bubble_pirate.png", textureManager());
+    m_bubblePirate->setPosition(GP::QueueOffset());
+}
+
 void InputQueue::doUpdate(float const elapsed)
 {
     if (m_inputs.empty()) {
@@ -20,6 +29,8 @@ void InputQueue::doUpdate(float const elapsed)
         checkForInput();
     }
     updateIcons(elapsed);
+    m_bubbleParrot->update(elapsed);
+    m_bubblePirate->update(elapsed);
 }
 
 bool InputQueue::checkForInvalidInput() const
@@ -74,8 +85,8 @@ void InputQueue::updateIcons(float elapsed)
         for (auto j = 0U; j != drawables.size(); ++j) {
             auto& icon = drawables.at(j);
 
-            auto const offset = GP::QueueOffset();
-            icon->setPosition(offset + jt::Vector2f { 24.0f * i + -20.0f * j });
+            auto const offset = GP::QueueOffset() + jt::Vector2f { 10.0f, 8.0f };
+            icon->setPosition(offset + jt::Vector2f { 12.0f * i, 0.0f });
             icon->update(elapsed);
         }
     }
@@ -86,6 +97,8 @@ void InputQueue::doDraw() const
     if (m_inputs.empty()) {
         return;
     }
+    m_bubbleParrot->draw(renderTarget());
+    m_bubblePirate->draw(renderTarget());
     auto const& icons = getAllIcons();
     for (auto const& i : icons) {
         i->draw(renderTarget());
@@ -170,4 +183,6 @@ void InputQueue::hide()
         m_hideCallback(getAllIcons());
     }
     m_isHidden = true;
+    m_bubbleParrot->setColor(jt::colors::Transparent);
+    m_bubblePirate->setColor(jt::colors::White);
 }

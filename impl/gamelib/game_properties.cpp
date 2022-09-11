@@ -21,4 +21,4 @@ jt::Palette GP::getPalette()
 jt::Vector2f GP::PlayerSize() { return jt::Vector2f { 16.0f, 16.0f }; }
 jt::Vector2f GP::PiratePosition() { return jt::Vector2f { 64.0f, 110.0f }; }
 jt::Vector2f GP::ParrotPosition() { return jt::Vector2f { 108.0f, 102.0f }; }
-jt::Vector2f GP::QueueOffset() { return jt::Vector2f { 30.0f, 40.0f }; }
+jt::Vector2f GP::QueueOffset() { return jt::Vector2f { 30.0f, 80.0f }; }

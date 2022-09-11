@@ -1,6 +1,7 @@
 ﻿#ifndef GAME_STATE_GAME_HPP
 #define GAME_STATE_GAME_HPP
 
+#include "audio/sound_group.hpp"
 #include "parrot.hpp"
 #include "pirate.hpp"
 #include "timer.hpp"
@@ -33,8 +34,11 @@ private:
     std::shared_ptr<Pirate> m_pirate { nullptr };
     std::shared_ptr<jt::Timer> m_pirateReturnToIdleTimer { nullptr };
 
-    std::shared_ptr<Parrot> m_parrot { nullptr };
+    std::shared_ptr<jt::SoundGroup> m_correctSounds { nullptr };
+    std::shared_ptr<jt::SoundInterface> m_incorrectSound { nullptr };
 
+    std::shared_ptr<Parrot> m_parrot { nullptr };
+    std::shared_ptr<DanceInputInterface> m_lastInput { nullptr };
     bool m_running { true };
     bool m_hasEnded { false };
 

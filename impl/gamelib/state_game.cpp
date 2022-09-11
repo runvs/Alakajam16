@@ -57,6 +57,15 @@ void StateGame::doInternalCreate()
         "bgm_chill", "assets/bgm_chill_intro.mp3", "assets/bgm_chill_loop.mp3", gain);
     bgm_chill->setVolume(0.25f);
     bgm_chill->play();
+
+    m_correctSounds = std::make_shared<jt::SoundGroup>();
+    m_correctSounds->add(std::make_shared<jt::Sound>("assets/snds/correct1.wav"));
+    m_correctSounds->add(std::make_shared<jt::Sound>("assets/snds/correct2.wav"));
+    m_correctSounds->add(std::make_shared<jt::Sound>("assets/snds/correct3.wav"));
+    m_correctSounds->setVolume(0.25f);
+
+    m_incorrectSound = getGame()->audio().addTemporarySound("assets/snds/incorrect.wav");
+    m_incorrectSound->setVolume(0.25f);
 }
 
 std::string getAnimNameFromType(eDanceInput input)
@@ -110,6 +119,9 @@ void StateGame::createQueue()
         m_pirateReturnToIdleTimer = std::make_shared<jt::Timer>(
             time, [this]() { m_pirate->m_anim->play("idle", 0, true); }, 1);
         add(m_pirateReturnToIdleTimer);
+
+        // play correct Sound
+        m_correctSounds->play();
     });
 
     m_inputQueue->setAllCorrectCallback(
@@ -143,6 +155,7 @@ void StateGame::createQueue()
             ic->flash(0.45f, jt::colors::Red);
             ic->shake(0.45f, 2.0f, 0.01f);
         }
+        m_inputQueue->m_bubblePirate->shake(0.45f, 2.0f, 0.01f);
         m_score--;
         m_hud->getObserverScoreP1()->notify(m_score);
         if (m_score <= 0) {
@@ -151,6 +164,7 @@ void StateGame::createQueue()
 
         add(std::make_shared<jt::Timer>(
             0.5f, [this]() { resetInputQueue(); }, 1));
+        m_incorrectSound->play();
     });
 
     m_inputQueue->setHideCallback(
@@ -194,7 +208,7 @@ void StateGame::doInternalUpdate(float const elapsed)
             endGame();
         }
     }
-
+    m_correctSounds->update();
     m_background->update(elapsed);
     m_vignette->update(elapsed);
 }
@@ -223,37 +237,47 @@ void StateGame::endGame()
 
 std::string StateGame::getName() const { return "State Game"; }
 
-std::shared_ptr<DanceInputInterface> createRandomDanceInput(jt::TextureManagerInterface& tm)
+std::shared_ptr<DanceInputInterface> createRandomDanceInput(
+    jt::TextureManagerInterface& tm, std::shared_ptr<DanceInputInterface> last)
 {
-    auto const randomValue = jt::Random::getInt(0, 3);
+    auto randomValue = jt::Random::getInt(0, 3);
+    if (last) {
+        bool repeatLast = jt::Random::getChance(0.3f);
+        if (repeatLast) {
+            randomValue = static_cast<int>(last->getType());
+        }
+    }
     if (randomValue == 0) {
-        return std::make_shared<DanceInputUp>(tm);
-    } else if (randomValue == 1) {
-        return std::make_shared<DanceInputDown>(tm);
-    } else if (randomValue == 2) {
         return std::make_shared<DanceInputLeft>(tm);
-    } else {
+    } else if (randomValue == 1) {
         return std::make_shared<DanceInputRight>(tm);
+    } else if (randomValue == 2) {
+        return std::make_shared<DanceInputUp>(tm);
+    } else {
+        return std::make_shared<DanceInputDown>(tm);
     }
 }
 
 // call this only once to add multiple inputs
 void StateGame::addInputsToQueue(std::size_t numberOfInputsToAdd)
 {
+    m_lastInput = nullptr;
     for (auto i = 0; i != numberOfInputsToAdd; ++i) {
         auto t = std::make_shared<jt::Timer>(
             0.75f * i,
             [this]() {
-                auto input = createRandomDanceInput(textureManager());
+                auto input = createRandomDanceInput(textureManager(), m_lastInput);
+                m_lastInput = input;
                 m_inputQueue->add(input);
 
                 getGame()->logger().debug("add input");
                 for (auto& i : input->getIcon()->getAllDrawables()) {
-                    i->setScale(jt::Vector2f { 5.0f, 5.0f });
+                    //                    i->setScale(jt::Vector2f { 5.0f, 5.0f });
                     i->setColor(jt::Color { 255, 255, 255, 0 });
-                    auto tws = jt::TweenScale::create(
-                        i, 0.4f, jt::Vector2f { 5.0f, 5.0f }, jt::Vector2f { 1.0f, 1.0f });
-                    add(tws);
+                    //                    auto tws = jt::TweenScale::create(
+                    //                        i, 0.4f, jt::Vector2f { 5.0f, 5.0f }, jt::Vector2f
+                    //                        { 1.0f, 1.0f });
+                    //                    add(tws);
 
                     auto twa = jt::TweenAlpha::create(i, 0.4f, 0, 255);
                     add(twa);
