@@ -11,6 +11,7 @@
 #include <log/license_info.hpp>
 #include <math_helper.hpp>
 #include <oalpp/effects/utility/gain.hpp>
+#include <screeneffects/screen_wrap.hpp>
 #include <screeneffects/vignette.hpp>
 #include <shape.hpp>
 #include <sprite.hpp>
@@ -20,7 +21,6 @@
 #include <tweens/tween_alpha.hpp>
 #include <tweens/tween_color.hpp>
 #include <tweens/tween_position.hpp>
-#include <tweens/tween_scale.hpp>
 #include <algorithm>
 
 void StateMenu::doInternalCreate()
@@ -36,7 +36,12 @@ void StateMenu::doInternalCreate()
     getGame()->stateManager().setTransition(std::make_shared<jt::StateManagerTransitionFadeToBlack>(
         GP::GetScreenSize(), textureManager()));
 
-    oalpp::effects::utility::Gain gain { 1.0f };
+    auto bgm_chill = getGame()->audio().getPermanentSound("bgm_chill");
+    if (bgm_chill) {
+        bgm_chill->stop();
+    }
+
+    oalpp::effects::utility::Gain gain { 0.0f };
     auto bgm = getGame()->audio().addPermanentSound(
         "bgm", "assets/bgm_intro.mp3", "assets/bgm_loop.mp3", gain);
     bgm->play();
@@ -197,6 +202,15 @@ void StateMenu::doInternalUpdate(float const elapsed)
     updateDrawables(elapsed);
     checkForTransitionToStateGame();
     jt::Vector2f const& axis = getGame()->input().gamepad(0)->getAxis(jt::GamepadAxisCode::ARight);
+    if (m_started) {
+        timeSinceStarted += elapsed;
+        auto v = timeSinceStarted / 0.75f;
+        if (v >= 1.0f) {
+            v = 1.0f;
+        }
+        auto bgm = getGame()->audio().getPermanentSound("bgm");
+        bgm->setBlend(v);
+    }
 }
 
 void StateMenu::updateDrawables(const float& elapsed)
@@ -225,7 +239,6 @@ void StateMenu::startTransitionToStateGame()
 {
     if (!m_started) {
         m_started = true;
-
         getGame()->stateManager().switchState(std::make_shared<StateGame>());
     }
 }

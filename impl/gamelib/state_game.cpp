@@ -47,10 +47,15 @@ void StateGame::doInternalCreate()
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
 
+    auto bgm = getGame()->audio().getPermanentSound("bgm");
+    if (bgm) {
+        bgm->stop();
+    }
+
     oalpp::effects::utility::Gain gain { 1.0f };
-    auto bgm = getGame()->audio().addPermanentSound(
-        "bgm", "assets/bgm_chill_intro.mp3", "assets/bgm_chill_loop.mp3", gain);
-    bgm->play();
+    auto bgm_chill = getGame()->audio().addPermanentSound(
+        "bgm_chill", "assets/bgm_chill_intro.mp3", "assets/bgm_chill_loop.mp3", gain);
+    bgm_chill->play();
 }
 
 std::string getAnimNameFromType(eDanceInput input)
@@ -209,7 +214,7 @@ void StateGame::endGame()
     }
     m_hasEnded = true;
     m_running = false;
-
+    getGame()->audio().getPermanentSound("bgm_chill")->stop();
     getGame()->stateManager().switchState(std::make_shared<StateMenu>());
 }
 

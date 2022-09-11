@@ -22,6 +22,7 @@ public:
 
 private:
     std::shared_ptr<jt::Animation> m_background;
+    float timeSinceStarted = 0.0f;
 
     std::shared_ptr<jt::Text> m_textTitle;
     std::shared_ptr<jt::Text> m_textStart;
