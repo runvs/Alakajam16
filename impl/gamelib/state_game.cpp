@@ -114,6 +114,9 @@ void StateGame::createQueue()
                     i, 0.45f, jt::Vector2f { 1.0f, 1.0f }, jt::Vector2f { 0.0f, 0.0f });
                 add(tws);
             }
+
+            m_pirate->m_anim->flash(0.5f, jt::colors::Green);
+
             m_score++;
             m_hud->getObserverScoreP1()->notify(m_score);
             auto t = std::make_shared<jt::Timer>(
@@ -164,6 +167,7 @@ void StateGame::createPirate()
 void StateGame::createParrot()
 {
     m_parrot = std::make_shared<Parrot>();
+
     add(m_parrot);
 }
 
@@ -235,8 +239,6 @@ void StateGame::addInputsToQueue(std::size_t numberOfInputsToAdd)
                     add(tws);
 
                     auto twa = jt::TweenAlpha::create(i, 0.4f, 0, 255);
-                    twa->addCompleteCallback(
-                        [this]() { getGame()->gfx().camera().shake(0.15f, 5.0f); });
                     add(twa);
 
                     m_parrot->m_anim->play(getAnimNameFromType(input->getType()));
