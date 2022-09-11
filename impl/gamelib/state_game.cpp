@@ -1,6 +1,7 @@
 ﻿#include "state_game.hpp"
 #include "dance_input/dance_input_left.hpp"
 #include "dance_input/dance_input_right.hpp"
+#include "oalpp/effects/utility/gain.hpp"
 #include "random/random.hpp"
 #include <box2dwrapper/box2d_world_impl.hpp>
 #include <color/color.hpp>
@@ -45,6 +46,11 @@ void StateGame::doInternalCreate()
 
     // StateGame will call drawObjects itself.
     setAutoDraw(false);
+
+    oalpp::effects::utility::Gain gain { 1.0f };
+    auto bgm = getGame()->audio().addPermanentSound(
+        "bgm", "assets/bgm_chill_intro.mp3", "assets/bgm_chill_loop.mp3", gain);
+    bgm->play();
 }
 
 std::string getAnimNameFromType(eDanceInput input)
