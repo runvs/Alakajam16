@@ -13,7 +13,7 @@ bool DanceInputRight::correctInputPressed(jt::InputGetInterface& input) const
         || input.keyboard()->justPressed(jt::KeyCode::D)) {
         return true;
     }
-    if (input.gamepad(0)->justPressed(jt::GamepadButtonCode::GBU5)) {
+    if (input.gamepad(0)->justPressed(jt::GamepadButtonCode::GBB)) {
         return true;
     }
     return false;
