@@ -8,21 +8,21 @@ jt::StateManagerTransitionFadeToBlack::StateManagerTransitionFadeToBlack(
 {
     m_shape = std::make_shared<jt::Shape>();
     m_shape->makeRect(overlaySize, tm);
-    m_shape->setColor(jt::Color { 0, 0, 0, 0 });
+    m_shape->setColor(jt::Color { 255, 255, 255, 0 });
     m_shape->setIgnoreCamMovement(true);
 }
 
 void jt::StateManagerTransitionFadeToBlack::doUpdate(float elapsed)
 {
     std::uint8_t a { static_cast<std::uint8_t>(getRatio() * 255.0f) };
-    jt::Color const col { 0, 0, 0, a };
+    jt::Color const col { 255, 255, 255, a };
     m_shape->setColor(col);
     m_shape->update(elapsed);
 }
 
 void jt::StateManagerTransitionFadeToBlack::doStart()
 {
-    m_shape->setColor(jt::Color { 0, 0, 0, 0 });
+    m_shape->setColor(jt::Color { 255, 255, 255, 0 });
 }
 
 void jt::StateManagerTransitionFadeToBlack::doDraw(std::shared_ptr<jt::RenderTarget> rt)
