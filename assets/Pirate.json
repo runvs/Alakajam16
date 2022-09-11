@@ -261,7 +261,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 33.ase": {
     "frame": { "x": 660, "y": 0, "w": 20, "h": 34 },
@@ -269,7 +269,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 34.ase": {
     "frame": { "x": 680, "y": 0, "w": 20, "h": 34 },
@@ -285,7 +285,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 36.ase": {
     "frame": { "x": 720, "y": 0, "w": 20, "h": 34 },
@@ -293,7 +293,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 37.ase": {
     "frame": { "x": 740, "y": 0, "w": 20, "h": 34 },
@@ -301,7 +301,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 38.ase": {
     "frame": { "x": 760, "y": 0, "w": 20, "h": 34 },
@@ -309,7 +309,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 39.ase": {
     "frame": { "x": 780, "y": 0, "w": 20, "h": 34 },
@@ -325,7 +325,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 41.ase": {
     "frame": { "x": 820, "y": 0, "w": 20, "h": 34 },
@@ -333,7 +333,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 42.ase": {
     "frame": { "x": 840, "y": 0, "w": 20, "h": 34 },
@@ -341,7 +341,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 43.ase": {
     "frame": { "x": 860, "y": 0, "w": 20, "h": 34 },
@@ -349,7 +349,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    "Pirate 44.ase": {
     "frame": { "x": 880, "y": 0, "w": 20, "h": 34 },
@@ -357,7 +357,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 300
    },
    "Pirate 45.ase": {
     "frame": { "x": 900, "y": 0, "w": 20, "h": 34 },
@@ -365,7 +365,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 300
    },
    "Pirate 46.ase": {
     "frame": { "x": 920, "y": 0, "w": 20, "h": 34 },
@@ -373,7 +373,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 450
    },
    "Pirate 47.ase": {
     "frame": { "x": 940, "y": 0, "w": 20, "h": 34 },
@@ -381,7 +381,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 34 },
     "sourceSize": { "w": 20, "h": 34 },
-    "duration": 100
+    "duration": 450
    }
  },
  "meta": {

@@ -129,7 +129,6 @@ void StateGame::createQueue()
         getGame()->logger().info("wrong input callback");
         auto icons = m_inputQueue->getAllIcons();
         for (auto& ic : icons) {
-
             ic->flash(0.45f, jt::colors::Red);
             ic->shake(0.45f, 2.0f, 0.01f);
         }
@@ -157,6 +156,9 @@ void StateGame::createQueue()
 void StateGame::resetInputQueue()
 {
     m_inputQueue->clear();
+    if (m_score == 0) {
+        m_score = 1;
+    }
     addInputsToQueue(m_score);
 }
 
